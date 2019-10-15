@@ -7,15 +7,13 @@
 var getElementsByClassName = function(className
 ) {
   // your code here
-  let coll = document.getElementsByTagName("*");
-  let list = Array.prototype.slice.call(coll, 0);
+  let coll = document.getElementsByTagName('*');
+  // let list = Array.prototype.slice.call(coll, 0);
   let returnList = [];
-  for(let i = 0; i < list.length; i++){
-    let names = list[i].className.split(' ');
-    for(let j = 0; j < names.length; j++){
-      if(names[j] === className){
-        returnList.push(list[i]);
-      }
+  for(let i = 0; i < coll.length; i++){
+    if(coll[i].classList.contains(className))
+    {
+      returnList.push(coll[i]);
     }
   }
   return returnList;
