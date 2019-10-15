@@ -8,8 +8,8 @@ var stringifyJSON = function(obj) {
   if(Array.isArray(obj)){
     return stringifyArray(obj);
   }
-  if(typeof obj === 'object'){
-    //to be filled
+  if(typeof obj === 'object' && obj !== null){
+    return stringifyObject(obj);
   }
 
   if(typeof obj === 'string'){
@@ -18,7 +18,67 @@ var stringifyJSON = function(obj) {
   return String(obj);
 };
 
-var stringifyArray = function(obj, strungArray) {
+var stringifyObject = function(obj, strungArray, entries){
+  if(entries === undefined){
+    entries = Object.entries(obj);
+  }
+
+  if(strungArray === undefined){
+    var strungArray = '{';
+  }
+
+  if(!entries.length){
+    strungArray += '}';
+    return strungArray;
+  }
+
+  let firstElement = entries.shift();
+  if(strungArray != '{'){
+    strungArray += ',';
+  }
+
+  strungArray += '\"';
+  strungArray += firstElement[0];
+  strungArray += '\"';
+  strungArray += ':';
+
+  if(typeof firstElement[1] === 'string'){
+    strungArray += '\"';
+    strungArray += firstElement[1];
+    strungArray += '\"';
+    return stringifyObject(obj, strungArray, entries);
+  }
+
+  if(Array.isArray(firstElement[1])){
+    let tempString = stringifyArray(firstElement[1]);
+    strungArray += tempString;
+    return stringifyObject(obj, strungArray, entries);
+  }
+
+  if(typeof firstElement[1] === 'object' && firstElement[1] !== null){
+    strungArray += '{';
+    for(let key in firstElement[1]){
+      strungArray += '\"';
+      strungArray += key;
+      strungArray += '\"';
+      strungArray += ':';
+      if(typeof firstElement[1][key] === 'string'){
+        strungArray += '\"';
+        strungArray += firstElement[1][key];
+        strungArray += '\"';
+      } else {
+        strungArray += firstElement[1][key];
+      }
+    }
+    strungArray += '}';
+    return stringifyObject(obj, strungArray, entries);
+  }
+
+  strungArray += firstElement[1];
+  return stringifyObject(obj, strungArray, entries);
+}
+
+var stringifyArray = function(obj, strungArray){
   if(strungArray === undefined){
     var strungArray = '[';
   }
@@ -34,9 +94,6 @@ var stringifyArray = function(obj, strungArray) {
   }
 
   if(typeof firstElement === 'string'){
-    // if(strungArray.length !== 1){
-    //   strungArray += ',';
-    // }
     strungArray += '\"';
     strungArray += firstElement;
     strungArray += '\"';
@@ -44,7 +101,6 @@ var stringifyArray = function(obj, strungArray) {
   }
 
   if(Array.isArray(firstElement)){
-    //to be filled
     let tempString = stringifyArray(firstElement);
     strungArray += tempString;
   }
@@ -53,9 +109,6 @@ var stringifyArray = function(obj, strungArray) {
     //to be filled
   }
 
-  // if(strungArray.length !== 1){
-  //   strungArray += ',';
-  // }
   strungArray += String(firstElement);
   return stringifyArray(obj, strungArray);
 }
