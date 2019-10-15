@@ -103,10 +103,14 @@ var stringifyArray = function(obj, strungArray){
   if(Array.isArray(firstElement)){
     let tempString = stringifyArray(firstElement);
     strungArray += tempString;
+    return stringifyArray(obj, strungArray);
   }
 
   if(typeof firstElement === 'object'){
     //to be filled
+    let tempString = stringifyObject(firstElement);
+    strungArray += tempString;
+    return stringifyArray(obj, strungArray);
   }
 
   strungArray += String(firstElement);
