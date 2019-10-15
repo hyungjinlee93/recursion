@@ -5,6 +5,10 @@
 
 var stringifyJSON = function(obj) {
   // your code goes here
+  if(typeof obj === 'function'){
+    return '{}';
+  }
+
   if(Array.isArray(obj)){
     return stringifyArray(obj);
   }
@@ -19,6 +23,10 @@ var stringifyJSON = function(obj) {
 };
 
 var stringifyObject = function(obj, strungArray, entries){
+  if(typeof obj === 'function'){
+    return '{}';
+  }
+
   if(entries === undefined){
     entries = Object.entries(obj);
   }
@@ -35,6 +43,10 @@ var stringifyObject = function(obj, strungArray, entries){
   let firstElement = entries.shift();
   if(strungArray != '{'){
     strungArray += ',';
+  }
+
+  if(typeof firstElement[1] === 'function'){
+    return '{}';
   }
 
   strungArray += '\"';
@@ -79,6 +91,10 @@ var stringifyObject = function(obj, strungArray, entries){
 }
 
 var stringifyArray = function(obj, strungArray){
+  if(typeof obj === 'function'){
+    return '{}';
+  }
+
   if(strungArray === undefined){
     var strungArray = '[';
   }
@@ -91,6 +107,10 @@ var stringifyArray = function(obj, strungArray){
   let firstElement = obj.shift();
   if(strungArray != '['){
     strungArray += ',';
+  }
+
+  if(typeof firstElement === 'function'){
+    return '{}';
   }
 
   if(typeof firstElement === 'string'){
